@@ -1,6 +1,6 @@
 {
   "name": "discord-hangman",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "🎲 Complete framework to facilitate the creation of hangman games using discord.js",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,6 @@
     "discord.js": "^12.5.1",
     "random-word": "^2.0.0"
   },
-
   "devDependencies": {},
   "keywords": [
     "discord",
