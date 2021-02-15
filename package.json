@@ -1,7 +1,7 @@
 {
   "name": "discord-hangman",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "🎲 Complete framework to facilitate the creation of hangman games using discord.js",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
