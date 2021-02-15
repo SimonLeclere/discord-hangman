@@ -6,10 +6,28 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimonLeclere/discord-hangman.git"
+  },
+  "author": "Simon Leclère",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.5.1",
     "random-word": "^2.0.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/SimonLeclere/discord-hangman/issues"
+  },
+  "homepage": "https://github.com/SimonLeclere/discord-hangman#readme",
+  "directories": {
+    "doc": "docs"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "discord",
+    "hangman",
+    "discord-hangman",
+    "pendu"
+  ]
 }
