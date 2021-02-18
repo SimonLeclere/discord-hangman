@@ -5,7 +5,7 @@ class HangmansManager {
 
     async create(channel, gameType, options = {}) {
 
-        if(!['custom', 'random'].includes(gameType)) throw new Error('Gamemode must be either \'custom\' or \'random\'')
+        if (!['custom', 'random'].includes(gameType)) throw new Error('Gamemode must be either \'custom\' or \'random\'');
 
         let word = options.word || null;
         const messages = options.messages || defaultOptions;
@@ -14,24 +14,26 @@ class HangmansManager {
         const players = await this.#gatherPlayers(channel, messages);
         if (players.length === 0) return channel.send(messages.createNoPlayers);
         if (gameType === 'custom' && players.length < 2) return channel.send(messages.customNotEnoughPlayers);
-    
+
         let selector;
-        if(gameType === 'custom') {
+        if (gameType === 'custom') {
             await channel.send(messages.customInitMessage.replace(/{players}/gi, players.length));
             // eslint-disable-next-line no-case-declarations
             const userSelection = await this.#getWordFromPlayers(players, channel, messages);
             if (userSelection) {
                 word = userSelection.word;
                 selector = userSelection.selector;
-            }
-            else {
+            } else {
                 return channel.send(messages.customNoMoreWords);
             }
         }
-    
+
         const game = new Hangman(word, channel, players, messages, displayWordOnGameOver);
         await game.start();
-        return { game, selector };
+        return {
+            game,
+            selector
+        };
     }
 
 
@@ -39,7 +41,9 @@ class HangmansManager {
         return new Promise(resolve => {
             const players = [];
             const filter = (msg) => (msg.content.toLowerCase().includes('join') && !msg.author.bot);
-            const collector = channel.createMessageCollector(filter, { time: 10000 });
+            const collector = channel.createMessageCollector(filter, {
+                time: 10000
+            });
             collector.on('collect', msg => {
                 players.push(msg.author);
                 msg.delete();
@@ -49,19 +53,21 @@ class HangmansManager {
             });
         });
     }
-    
+
     async #gatherPlayersFromReaction(message, emoji) {
-    
+
         await message.react(emoji);
-    
+
         // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             const players = [];
             const filter = (r) => (r.emoji.name == emoji);
             // const filter = (r) => { return true; };
-            await message.awaitReactions(filter, { time: 10000 })
+            await message.awaitReactions(filter, {
+                    time: 10000
+                })
                 .then(collected => {
-                    if(collected.size === 0) return;
+                    if (collected.size === 0) return;
                     collected.first().users.cache.forEach((user) => {
                         if (!user.bot) {
                             players.push(user);
@@ -69,11 +75,11 @@ class HangmansManager {
                     });
                 })
                 .catch(err => reject(err));
-    
+
             resolve(players);
         });
     }
-    
+
     async #gatherPlayers(channel, messages) {
         const msg = await channel.send(messages.gatherPlayersMsg);
         const p1 = this.#gatherPlayersFromMessage(channel);
@@ -89,7 +95,7 @@ class HangmansManager {
         }));
         return players;
     }
-    
+
     async #getWordFromPlayers(players, channel, messages) {
         let word;
         let chosenOne;
@@ -97,31 +103,35 @@ class HangmansManager {
             const index = Math.floor((Math.random() * 1000) % players.length);
             chosenOne = players[index];
             players.splice(index, 1);
-    
+
             const dm = await chosenOne.createDM();
-    
+
             await dm.send(messages.getWordFromPlayersDm);
             let finish = false;
             let tries = 0;
             let msgCollection;
             while (!finish && tries < 3) {
                 try {
-                    msgCollection = await dm.awaitMessages((m) => !m.author.bot, { max: 1, time: 30000, errors: ['time'] }).catch((collected) => { throw collected; });
-                }
-                catch (collected) {
+                    msgCollection = await dm.awaitMessages((m) => !m.author.bot, {
+                        max: 1,
+                        time: 30000,
+                        errors: ['time']
+                    }).catch((collected) => {
+                        throw collected;
+                    });
+                } catch (collected) {
                     await dm.send(messages.timesUpDm);
                     await channel.send(messages.timesUpMsg);
                     finish = true;
                     continue;
                 }
-    
+
                 const msg = msgCollection.first().content;
                 if (msg.match(/^[A-Za-zÀ-ú]{3,}$/)) {
                     word = msg.toLowerCase();
                     finish = true;
                     dm.send(messages.wordSuccess);
-                }
-                else {
+                } else {
                     await dm.send(messages.invalidWord);
                     ++tries;
                     if (tries == 3) {
@@ -130,12 +140,15 @@ class HangmansManager {
                 }
             }
         }
-    
+
         if (!word && players.length <= 1) {
             return;
         }
-    
-        return { word: word, selector: chosenOne };
+
+        return {
+            word: word,
+            selector: chosenOne
+        };
     }
 }
 
