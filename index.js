@@ -3,9 +3,20 @@ const Hangman = require('./hangman.js');
 
 class HangmansManager {
 
-    async create(channel, gameType, options = {}) {
+    async create(message, channel, gameType, options = {}) {
 
-        if (!['custom', 'random'].includes(gameType)) throw new Error('Gamemode must be either \'custom\' or \'random\'');
+        if (!['custom', 'random', 'quickstart'].includes(gameType)) throw new Error('Gamemode must be either \'custom\', \'random\', or \'quickstart\'')
+
+        if (gameType === 'quickstart') {
+            const displayWordOnGameOver = typeof options.displayWordOnGameOver === 'boolean' ? options.displayWordOnGameOver : true;
+            const players = [message.author]
+            const messages = options.messages || defaultOptions;
+            let word = null;
+        
+            const game = new Hangman(word, channel, players, messages, displayWordOnGameOver);
+            await game.start();
+            return { game };
+        }
 
         let word = options.word || null;
         const messages = options.messages || defaultOptions;
