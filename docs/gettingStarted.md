@@ -8,30 +8,31 @@ const hangman = require('discord-hangman');
 
 Pretty simple, isn't it? Now you have access to the hangman.create() method!
 
-This method is asynchronous and takes as parameters the channel in which to launch the game, the game mode, and an optional object.
+This method is asynchronous and takes the parameters of the message, the channel in which to launch the game, the game mode, and an optional object.
 
-The game mode must be either `'custom'` or `'random'`.
+The game mode must be either `'custom'`, `'random'`, or `'quickstart'`.
 
 Example :
 ```js
-await hangman.create(message.channel, 'random')
+await hangman.create(message, message.channel, 'random')
 ```
 
 ## Gamemodes
 
-There are two game modes available, `'custom'` and `'random'`.
+There are three game modes available, `'custom'`, `'random'`, and `'quickstart'`.
 - When the game mode is set to `'random'`, the word to guess is drawn at random.
 - In `'custom'` mode, a player is randomly chosen to pick the word. This player will not be able to participate in the game afterwards.
+- The `'quickstart'` mode, automatically starts a game and makes the message author the only player in the game.
 
 ## Customize the word
 
 To use a defined word, for example a word in your language, you can use the `option.word` option.
 
 ```js
-await hangman.create(message.channel, 'random', { word: 'discord' })
+await hangman.create(message, message.channel, 'random', { word: 'discord' })
 ```
 The word provided must not contain spaces, numbers or special characters. Only uppercase, lowercase and accented letters or not.
-If the game mode is set to `'custom'`, this option will be ignored.
+If the game mode is set to `'custom'` or `'quickstart'`, this option will be ignored.
 
 ## Translating
 
@@ -66,7 +67,7 @@ You can easily translate the messages of the module into your language by using 
 By default, the module displays at the end of the game the word to be found in case of a defeat. If you want to use a custom message, you can use the `displayWordOnGameOver` option and a `.then()`.
 
 ```js
-hangman.create(message.channel, 'random', { displayWordOnGameOver: false }).then(data => {
+hangman.create(message, message.channel, 'random', { displayWordOnGameOver: false }).then(data => {
 
     if(!data.game) return; // If the game is cancelled or no one joins it
 
