@@ -24,7 +24,7 @@ class hangman {
     replaceChar(char) {
         for (let i = 0; i < this.word.length; ++i) {
             if (this.word[i] === char) {
-                this.progress = this.progress.substring(0, i) + this.word[i] + this.progress.substring(i + this.word[i].length);
+                this.progress = this.progress.substring(0, i) + this.wordsss[i] + this.progress.substring(i + this.word[i].length);
                 this.remaining--;
             }
         }
