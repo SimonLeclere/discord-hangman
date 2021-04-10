@@ -11,7 +11,7 @@ class HangmansManager {
         const messages = options.messages || defaultOptions;
         const displayWordOnGameOver = typeof options.displayWordOnGameOver === 'boolean' ? options.displayWordOnGameOver : true;
 
-        const players = await this.#gatherPlayers(channel, messages);
+        const players = options.players || await this.#gatherPlayers(channel, messages, options.allow ?? '');
         if (players.length === 0) return channel.send(messages.createNoPlayers);
         if (gameType === 'custom' && players.length < 2) return channel.send(messages.customNotEnoughPlayers);
 
@@ -37,11 +37,12 @@ class HangmansManager {
     }
 
 
-    #gatherPlayersFromMessage(channel) {
+    #gatherPlayersFromMessage(channel, allow) {
         return new Promise(resolve => {
             const players = [];
             const filter = (msg) => (msg.content.toLowerCase().includes('join') && !msg.author.bot);
-            const collector = channel.createMessageCollector(filter, {
+            const allowfilter = (msg) => (msg.content.toLowerCase().includes('join') && !msg.author.bot && allow.includes(msg.author))
+            const collector = channel.createMessageCollector(allow ? allowfilter : filter, {
                 time: 10000
             });
             collector.on('collect', msg => {
@@ -54,7 +55,7 @@ class HangmansManager {
         });
     }
 
-    async #gatherPlayersFromReaction(message, emoji) {
+    async #gatherPlayersFromReaction(message, emoji, allow) {
 
         await message.react(emoji);
 
@@ -63,14 +64,20 @@ class HangmansManager {
             const players = [];
             const filter = (r) => (r.emoji.name == emoji);
             // const filter = (r) => { return true; };
-            await message.awaitReactions(filter, {
+            const allowfilter = (r, user) => (allow.includes(user) && r.emoji.name == emoji)
+            await message.awaitReactions(allow ? allowfilter : filter, {
                     time: 10000
                 })
                 .then(collected => {
                     if (collected.size === 0) return;
                     collected.first().users.cache.forEach((user) => {
-                        if (!user.bot) {
+                        if (allow) {
+                            if (user.bot || !allow.includes(user)) return
                             players.push(user);
+                        }
+                        else {
+                            if (user.bot) return
+                            players.push(user)
                         }
                     });
                 })
@@ -80,10 +87,11 @@ class HangmansManager {
         });
     }
 
-    async #gatherPlayers(channel, messages) {
+    async #gatherPlayers(channel, messages, allow) {
+
         const msg = await channel.send(messages.gatherPlayersMsg);
-        const p1 = this.#gatherPlayersFromMessage(channel);
-        const p2 = this.#gatherPlayersFromReaction(msg, '📒');
+        const p1 = this.#gatherPlayersFromMessage(channel, allow);
+        const p2 = this.#gatherPlayersFromReaction(msg, '📒', allow);
         const aPlayers = await Promise.all([p1, p2]);
         msg.delete();
         const players = [];
