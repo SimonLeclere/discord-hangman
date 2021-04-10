@@ -33,6 +33,27 @@ await hangman.create(message.channel, 'random', { word: 'discord' })
 The word provided must not contain spaces, numbers or special characters. Only uppercase, lowercase and accented letters or not.
 If the game mode is set to `'custom'`, this option will be ignored.
 
+## Players option
+
+You can automatically add certain players to a game and start the game by using the `option.players` option.
+One particular use of this option, is to automatically start a game with the players value being the message author which creates a quick singleplayer game.
+
+```js
+hangman.create(message.channel, 'random', {players: [message.author]})
+```
+The players value provided must be within an array -> '[]'. If the value is not in an array, you can add it inside of an array '[]'.
+
+## Allow option
+
+Like the `option.players` option, you can add certain players to a game. Unlike the 'players' option however, the allow option will not automatically start the game. Instead, it only let's the defined values of `option.allow` be able to join the game. People not in the allow option, can still react and write 'join' but they will not join the game
+
+```js
+let allowed = message.guild.roles.cache.get('ROLEID').members.map(m => m.user)
+
+hangman.create(message.channel, 'random', {allow: allowed})
+```
+The allow value provided must be within an array -> '[]'. If the value is not in an array, you can add it inside of an array '[]'.
+
 ## Translating
 
 You can easily translate the messages of the module into your language by using the `option.messages` option. This option must be an object like this :
