@@ -49,7 +49,7 @@ class HangmansManager {
                     if (filters(msg.member)) {
                         players.push(msg.author);
                         msg.delete();
-                    }
+                     }
                 } else {
                     players.push(msg.author);
                     msg.delete();
