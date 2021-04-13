@@ -45,7 +45,7 @@ The players value provided must be within an array -> '[]'. If the value is not 
 
 ## Filter option
 
-The filter option, allows you determine which people are allowed to join a game. The filter option let's you do this by letting you creation your very own function!
+The filter option, allows you determine which people are allowed to join a game. The filter option let's you do this by letting you create your very own function!
 
 ```js 
 await hangman.create(message.channel, 'random', {
