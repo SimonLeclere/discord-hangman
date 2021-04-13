@@ -43,16 +43,17 @@ hangman.create(message.channel, 'random', {players: [message.author]})
 ```
 The players value provided must be within an array -> '[]'. If the value is not in an array, you can add it inside of an array '[]'.
 
-## Allow option
+## Filter option
 
-Like the `option.players` option, you can add certain players to a game. Unlike the 'players' option however, the allow option will not automatically start the game. Instead, it only let's the defined values of `option.allow` be able to join the game. People not in the allow option, can still react and write 'join' but they will not join the game
+The filter option, allows you determine which people are allowed to join a game. The filter option let's you do this by letting you creation your very own function!
 
 ```js
-let allowed = message.guild.roles.cache.get('ROLEID').members.map(m => m.user)
-
-hangman.create(message.channel, 'random', {allow: allowed})
+await hangman.create(message.channel, 'random', {
+    filter: member => {return member.roles.cache.has("ROLEID")}
+    }
+)
 ```
-The allow value provided must be within an array -> '[]'. If the value is not in an array, you can add it inside of an array '[]'.
+Remember to your return your end value at the end of the function
 
 ## Translating
 
