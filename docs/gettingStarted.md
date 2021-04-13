@@ -47,7 +47,7 @@ The players value provided must be within an array -> '[]'. If the value is not 
 
 The filter option, allows you determine which people are allowed to join a game. The filter option let's you do this by letting you creation your very own function!
 
-```js
+```js 
 await hangman.create(message.channel, 'random', {
     filter: member => {return member.roles.cache.has("ROLEID")}
     }
