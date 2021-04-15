@@ -44,7 +44,7 @@ class HangmansManager {
             const collector = channel.createMessageCollector(gatherFilter, {
                 time: 10000
             });
-            collector.on('collect', msg => {         
+            collector.on('collect', msg => {
                 players.push(msg.author);
                 msg.delete();
             });
@@ -61,13 +61,15 @@ class HangmansManager {
         // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             const players = [];
-            const gatherFilter = (r, u) => r.emoji.name === emoji && !u.bot && filter(u);
+            const gatherFilter = (r) => r.emoji.name === emoji;
             await message.awaitReactions(gatherFilter, {
                     time: 10000
                 })
                 .then(collected => {
                     if (collected.size === 0) return
                     collected.first().users.cache.forEach(async (user) => {
+                        if (user.bot) return
+                        if (filter(user))
                         players.push(user)
                     })
                 })
