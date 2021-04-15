@@ -59,7 +59,7 @@ class HangmansManager {
         await message.react(emoji);
 
         // eslint-disable-next-line no-async-promise-executor
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async resolve => {
             const players = [];
             const gatherFilter = (r, u) => r.emoji.name === emoji && !u.bot && filter(u);
             const collector = message.createReactionCollector(gatherFilter, {
