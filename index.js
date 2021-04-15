@@ -68,7 +68,7 @@ class HangmansManager {
             collector.on('collect', (reaction, u) => {
                 players.push(u)
             });
-            collector.on('end', collected => {
+            collector.on('end', async () => {
                 resolve(players)
             });
         });
