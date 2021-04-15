@@ -39,9 +39,9 @@ You can automatically add certain players to a game and start the game by using 
 One particular use of this option, is to automatically start a game with the players value being the message author which creates a quick singleplayer game.
 
 ```js
-hangman.create(message.channel, 'random', {players: [message.author]})
+hangman.create(message.channel, 'random', { players: [message.author] })
 ```
-The players value provided must be within an array -> '[]'. If the value is not in an array, you can add it inside of an array '[]'.
+The players value provided must be an array of discord users.
 
 ## Filter option
 
@@ -49,11 +49,10 @@ The filter option, allows you determine which people are allowed to join a game.
 
 ```js
 await hangman.create(message.channel, 'random', {
-    filter: member => {return member.roles.cache.has("ROLEID")}
-    }
-)
+    filter: user => message.guild.member(user.id).roles.cache.has('ROLEID')
+})
 ```
-Remember to your return your end value at the end of the function
+This function should return a boolean value (true or false) !
 
 ## Translating
 

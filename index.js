@@ -11,7 +11,7 @@ class HangmansManager {
         const messages = options.messages || defaultOptions;
         const displayWordOnGameOver = typeof options.displayWordOnGameOver === 'boolean' ? options.displayWordOnGameOver : true;
 
-        const players = options.players || await this.#gatherPlayers(channel, messages, options.filter ?? '');
+        const players = options.players || await this.#gatherPlayers(channel, messages, options.filter ? options.filter : () => true);
         if (players.length === 0) return channel.send(messages.createNoPlayers);
         if (gameType === 'custom' && players.length < 2) return channel.send(messages.customNotEnoughPlayers);
 
@@ -37,23 +37,16 @@ class HangmansManager {
     }
 
 
-    #gatherPlayersFromMessage(channel, filters) {
+    #gatherPlayersFromMessage(channel, filter) {
         return new Promise(resolve => {
             const players = [];
-            const filter = (msg) => (msg.content.toLowerCase().includes('join') && !msg.author.bot);
-            const collector = channel.createMessageCollector(filter, {
+            const gatherFilter = msg => msg.content.toLowerCase().includes('join') && !msg.author.bot && filter(msg.author);
+            const collector = channel.createMessageCollector(gatherFilter, {
                 time: 10000
             });
-            collector.on('collect', msg => {
-                if (filters) {
-                    if (filters(msg.member)) {
-                        players.push(msg.author);
-                        msg.delete();
-                    }
-                } else {
-                    players.push(msg.author);
-                    msg.delete();
-                }
+            collector.on('collect', msg => {         
+                players.push(msg.author);
+                msg.delete();
             });
             collector.on('end', async () => {
                 resolve(players);
@@ -61,28 +54,21 @@ class HangmansManager {
         });
     }
 
-    async #gatherPlayersFromReaction(message, emoji, filters) {
+    async #gatherPlayersFromReaction(message, emoji, filter) {
 
         await message.react(emoji);
 
         // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             const players = [];
-            const filter = async(r) => r.emoji.name === emoji;
-            // const filter = (r) => { return true; };
-            await message.awaitReactions(filter, {
+            const gatherFilter = (r, u) => r.emoji.name === emoji && !u.bot && filter(u);
+            await message.awaitReactions(gatherFilter, {
                     time: 10000
                 })
                 .then(collected => {
                     if (collected.size === 0) return
                     collected.first().users.cache.forEach(async (user) => {
-                        if (user.bot) return
-                            if (filters) {
-                                if (filters(await message.guild.members.fetch(user)))
-                                players.push(user)
-                            } else {
-                                players.push(user)
-                        }
+                        players.push(user)
                     })
                 })
                 .catch(err => reject(err));
@@ -91,11 +77,11 @@ class HangmansManager {
         });
     }
 
-    async #gatherPlayers(channel, messages, filters) {
+    async #gatherPlayers(channel, messages, filter) {
 
         const msg = await channel.send(messages.gatherPlayersMsg);
-        const p1 = this.#gatherPlayersFromMessage(channel, filters);
-        const p2 = this.#gatherPlayersFromReaction(msg, '📒', filters);
+        const p1 = this.#gatherPlayersFromMessage(channel, filter);
+        const p2 = this.#gatherPlayersFromReaction(msg, '📒', filter);
         const aPlayers = await Promise.all([p1, p2]);
         msg.delete();
         const players = [];
