@@ -65,7 +65,7 @@ class HangmansManager {
             const collector = message.createReactionCollector(gatherFilter, {
                 time: 10000
             });
-            collector.on('collect', (reaction, u) => {
+            collector.on('collect', (r, u) => {
                 players.push(u)
             });
             collector.on('end', async () => {
