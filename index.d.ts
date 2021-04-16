@@ -41,6 +41,8 @@ interface HangmanOptions {
     word?: string;
     messages?: HangmanMessages;
     displayWordOnGameOver?: boolean;
+    players?: User[];
+    filter?: function;
 }
 
 class Hangman {
