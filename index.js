@@ -11,7 +11,7 @@ class HangmansManager {
         const messages = options.messages || defaultOptions;
         const displayWordOnGameOver = typeof options.displayWordOnGameOver === 'boolean' ? options.displayWordOnGameOver : true;
 
-        const players = options.players || await this.#gatherPlayers(channel, messages, options.filter ? options.filter : () => true);
+        const players = options.players || await this.gatherPlayers(channel, messages, options.filter ? options.filter : () => true);
         if (players.length === 0) return channel.send(messages.createNoPlayers);
         if (gameType === 'custom' && players.length < 2) return channel.send(messages.customNotEnoughPlayers);
 
@@ -19,7 +19,7 @@ class HangmansManager {
         if (gameType === 'custom') {
             await channel.send(messages.customInitMessage.replace(/{players}/gi, players.length));
             // eslint-disable-next-line no-case-declarations
-            const userSelection = await this.#getWordFromPlayers(players, channel, messages);
+            const userSelection = await this.getWordFromPlayers(players, channel, messages);
             if (userSelection) {
                 word = userSelection.word;
                 selector = userSelection.selector;
@@ -37,7 +37,7 @@ class HangmansManager {
     }
 
 
-    #gatherPlayersFromMessage(channel, filter) {
+    gatherPlayersFromMessage(channel, filter) {
         return new Promise(resolve => {
             const players = [];
             const gatherFilter = msg => msg.content.toLowerCase().includes('join') && !msg.author.bot && filter(msg.author);
@@ -54,7 +54,7 @@ class HangmansManager {
         });
     }
 
-    async #gatherPlayersFromReaction(message, emoji, filter) {
+    async gatherPlayersFromReaction(message, emoji, filter) {
 
         await message.react(emoji);
 
@@ -74,11 +74,11 @@ class HangmansManager {
         });
     }
 
-    async #gatherPlayers(channel, messages, filter) {
+    async gatherPlayers(channel, messages, filter) {
 
         const msg = await channel.send(messages.gatherPlayersMsg);
-        const p1 = this.#gatherPlayersFromMessage(channel, filter);
-        const p2 = this.#gatherPlayersFromReaction(msg, '📒', filter);
+        const p1 = this.gatherPlayersFromMessage(channel, filter);
+        const p2 = this.gatherPlayersFromReaction(msg, '📒', filter);
         const aPlayers = await Promise.all([p1, p2]);
         msg.delete();
         const players = [];
@@ -91,7 +91,7 @@ class HangmansManager {
         return players;
     }
 
-    async #getWordFromPlayers(players, channel, messages) {
+    async getWordFromPlayers(players, channel, messages) {
         let word;
         let chosenOne;
         while (!word && players.length > 1) {

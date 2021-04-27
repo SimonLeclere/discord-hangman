@@ -85,21 +85,21 @@ export default class HangmansManager {
         options?: HangmanOptions
     ): Promise<GameResult>
 
-    private #getPlayersFromMessage(
+    private getPlayersFromMessage(
         channel: TextChannel
     ): Promise<User[]>
 
-    private async #gatherPlayersFromReaction(
+    private async gatherPlayersFromReaction(
         message: Message, 
         emoji: string
     ): Promise<User[]>
 
-    private async #gatherPlayers(
+    private async gatherPlayers(
         channel: TextChannel, 
         messages: HangmanMessages
     ): Promise<User[]>
 
-    private async #getWordFromPlayers(
+    private async getWordFromPlayers(
         players: User[], 
         channel: TextChannel, 
         messages: HangmanMessages
