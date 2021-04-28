@@ -68,6 +68,9 @@ class HangmansManager {
             collector.on('collect', (r, u) => {
                 players.push(u)
             });
+            collector.on('remove', (r, u) => {
+                players.splice(players.indexOf(u), 1)
+            });
             collector.on('end', async () => {
                 resolve(players)
             });
