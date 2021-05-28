@@ -9,6 +9,7 @@ If you have an idea or a problem, don't hesitate to open an issue :)
 -   ⏱️ Easy to use! Create the game and the module takes care of the rest!
 -   ⚙️ Two gamemodes : random and custom !
 -   💥 Multiplayer support and auto-gathering players !
+-   ✋ Filter: Allow only certain players to join a game !
 -   🌐 Support for all languages !
 
 ## Description
@@ -27,6 +28,9 @@ Example : A screenshot of the game
 ```js
 npm install discord-hangman
 ```
+Discord Hangman's main installation requires node versions higher than node v12.\
+If you are still using node v12, please download Discord Hangman from the 'node-v12' branch !\
+Please install the node-v12 version when using Repl.it (Repl.it currently locks your project to node v12) !
 
 ## Documentation
 
