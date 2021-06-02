@@ -9,6 +9,7 @@ If you have an idea or a problem, don't hesitate to open an issue :)
 -   ⏱️ Easy to use! Create the game and the module takes care of the rest!
 -   ⚙️ Two gamemodes : random and custom !
 -   💥 Multiplayer support and auto-gathering players !
+-   ✋ Filter: Allow only certain players to join a game !
 -   🌐 Support for all languages !
 
 ## Description
@@ -21,11 +22,10 @@ Example : A screenshot of the game
 
 ![example](docs/assets/example.png)
 
-
 ## Installation
 
 ```js
-npm install discord-hangman
+npm install SimonLeclere/discord-hangman#node-v12
 ```
 
 ## Documentation
