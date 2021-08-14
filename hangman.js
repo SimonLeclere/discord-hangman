@@ -33,6 +33,7 @@ class hangman {
     async showProgress() {
         const embed = new Discord.MessageEmbed()
             .setDescription('```\n' + this.getFigure() + '```')
+            .addField('Players', this.playerlist())
             .setColor(this.gameOver ? (this.status === 'won' ? '#00CC00' : '#E50000') : '');
 
         if (this.message) await this.message.edit({
@@ -41,6 +42,13 @@ class hangman {
         else this.message = await this.channel.send({
             embed: embed
         });
+    }
+    
+    playerlist() {
+        const filter = this.players.slice(0, 3)
+        const remaining = this.players.length - filter.length === 0 ? '' : `+ ${this.players.length - filter.length} more`
+
+        return filter.join('\n') + remaining
     }
 
     getFigure() {
