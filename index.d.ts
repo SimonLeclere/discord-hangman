@@ -68,6 +68,8 @@ class Hangman {
     public replaceChar(char: string): void;
 
     public async showProgress(): Promise<void>;
+    
+    public playerlist(): string;
 
     public getFigure(): string;
 
