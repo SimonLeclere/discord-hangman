@@ -45,6 +45,7 @@ class hangman {
     }
     
     playerlist() {
+        if (!this.players.length) return this.messages.noplayers
         const filter = this.players.slice(0, 3)
         const remaining = this.players.length - filter.length === 0 ? '' : `+ ${this.players.length - filter.length} more`
 
