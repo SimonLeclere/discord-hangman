@@ -33,6 +33,7 @@ interface HangmanMessages {
 
     misses: string;
     won: string;
+    noplayersleft: string;
     gameOver: string;
     gameOverMsg: string;
 }
