@@ -43,3 +43,5 @@ This module is inspired by this repo :
 https://github.com/Zheoni/Hanger-Bot
 
 Which is unfortunately no longer updated :/
+
+PS : A huge thanks to [@Spongecade](https://github.com/Spongecade) for his help and participation, without him discord-hangman would not be what it is today :)
