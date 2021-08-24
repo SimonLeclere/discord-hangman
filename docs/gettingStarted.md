@@ -77,6 +77,7 @@ You can easily translate the messages of the module into your language by using 
 
     misses: 'Misses',
     won: 'You won !',
+    noplayersleft: 'No Players Left',
     gameOver: 'Game over !',
     gameOverMsg: 'The word was {word}'
 }
