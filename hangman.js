@@ -1,11 +1,9 @@
 const { Embed } = require('@discordjs/builders');
 const randomWord = require('random-word');
-const randomWordFR = require('random-word-fr');
 
 class hangman {
-    constructor(word = null, interaction, players, messages, displayWordOnGameOver, lang) {
-        this.lang = lang || 'en';
-        this.word = word || this.lang === 'en' ? randomWord() : randomWordFR();
+    constructor(word = null, interaction, players, messages, displayWordOnGameOver) {
+        this.word = word || randomWord();
         this.lives = 6;
         this.progress = hangman.hyphenString(this.word.length);
         this.remaining = this.word.length;
@@ -19,8 +17,17 @@ class hangman {
         this.displayWordOnGameOver = displayWordOnGameOver;
     }
 
-    static hyphenString(n) { return '-'.repeat(n); };
-    replaceChar(char) { for (let i = 0; i < this.word.length; ++i) { if (this.word[i] === char) { this.progress = this.progress.substring(0, i) + this.word[i] + this.progress.substring(i + this.word[i].length); this.remaining--; }; }; };
+    static hyphenString(n) { 
+        return '-'.repeat(n); 
+    };
+    replaceChar(char) { 
+        for (let i = 0; i < this.word.length; ++i) { 
+            if (this.word[i] === char) { 
+                this.progress = this.progress.substring(0, i) + this.word[i] + this.progress.substring(i + this.word[i].length); 
+                this.remaining--; 
+            }; 
+        }; 
+    };
 
     async showProgress() {
         const embed = new Embed().setDescription('```\n' + this.getFigure() + '```').addField({ name: 'Players', value: this.playerlist() }).setColor(this.gameOver ? (this.status === 'won' ? 0x00CC00 : 0xE50000) : 0x000000);
@@ -50,14 +57,25 @@ class hangman {
     guess(c) {
         if (this.progress.includes(c)) this.lives--; 
         else if (this.word.includes(c)) this.replaceChar(c);
-        else { if (!this.misses.includes(c)) this.misses.push(c); this.lives--; }
+        else { 
+            if (!this.misses.includes(c)) this.misses.push(c); 
+            this.lives--; 
+        };
         if (this.lives === 0) this.status = 'lost';
         else if (this.remaining === 0) this.status = 'won';
-        return { status: this.status, progress: this.progress, misses: this.misses, lifes: this.lives };
+        return { 
+            status: this.status, 
+            progress: this.progress, 
+            misses: this.misses, 
+            lifes: this.lives 
+        };
     };
 
     guessAll(word) {
-        if (this.word === word) { this.progress = this.word; this.status = 'won'; } 
+        if (this.word === word) { 
+            this.progress = this.word; 
+            this.status = 'won'; 
+        } 
         else this.lives--; 
         return this.status === 'won';
     };
@@ -72,14 +90,18 @@ class hangman {
                 if (!m.content.match(new RegExp(`^[A-Za-zÀ-ú](?:.{0}|.{${this.word.length - 1}})$`))) return;
                 const c = m.content.toLowerCase();
                 m.delete();
-                if (m.content.length === this.word.length) { if (this.guessAll(c) === false) this.players = this.players.filter(p => p.id !== m.author.id); } 
+                if (m.content.length === this.word.length) { 
+                    if (this.guessAll(c) === false) this.players = this.players.filter(p => p.id !== m.author.id); 
+                } 
                 else if (m.content.length === 1) this.guess(c); 
                 else return; 
+                
                 await this.showProgress();
-
                 if (this.status !== 'in progress') collector.stop(); 
-                else if (this.players.length < 1) { collector.stop(); this.status = 'lost'; }
-
+                else if (this.players.length < 1) { 
+                    collector.stop(); 
+                    this.status = 'lost'; 
+                };
             });
             collector.on('end', async () => {
                 this.gameOver = true;
