@@ -44,6 +44,7 @@ interface HangmanOptions {
     displayWordOnGameOver?: boolean;
     players?: User[];
     filter?: function;
+    lang?: 'en' | 'fr';
 }
 
 class Hangman {
