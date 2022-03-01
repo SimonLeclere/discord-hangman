@@ -43,17 +43,6 @@ hangman.create(interaction, 'random', { players: [interaction.user] })
 ```
 The players value provided must be an array of discord users.
 
-## Language option
-
-You can change the langage of random words and of the bot reponses by using the `option.lang` option.
-*The supporting languages are only English and French at the moment*
-
-```js
-hangman.create(interaction, 'random', { lang: "fr" })
-```
-The lang value provided must be an String "en" or "fr".
-*The default langage is English*
-
 ## Filter option
 
 The filter option, allows you determine which people are allowed to join a game. The filter option let's you do this by letting you create your very own function!
