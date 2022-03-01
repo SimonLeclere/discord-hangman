@@ -36,10 +36,10 @@ If the game mode is set to `'custom'`, this option will be ignored.
 ## Players option
 
 You can automatically add certain players to a game and start the game by using the `option.players` option.
-One particular use of this option, is to automatically start a game with the players value being the message author which creates a quick singleplayer game.
+One particular use of this option, is to automatically start a game with the players value being the interaction user which creates a quick singleplayer game.
 
 ```js
-hangman.create(interaction, 'random', { players: [message.author] })
+hangman.create(interaction, 'random', { players: [interaction.user] })
 ```
 The players value provided must be an array of discord users.
 
@@ -60,7 +60,7 @@ The filter option, allows you determine which people are allowed to join a game.
 
 ```js
 await hangman.create(interaction, 'random', {
-    filter: user => message.guild.member(user.id).roles.cache.has('ROLEID')
+    filter: user => interaction.guild.members.cache.get(user.id).roles.cache.has('ROLEID')
 })
 ```
 This function should return a boolean value (true or false) !
