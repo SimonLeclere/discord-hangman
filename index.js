@@ -1,5 +1,4 @@
-const defaultOptions = require('./lang/defaultOptions.js');
-const defaultFROptions = require('./lang/defaultFROptions.js');
+const defaultOptions = require('./defaultOptions.js');
 const Hangman = require('./hangman.js');
 
 class HangmansManager {
@@ -7,7 +6,7 @@ class HangmansManager {
         if (!['custom', 'random'].includes(gameType)) throw new Error('Gamemode must be either \'custom\' or \'random\'');
 
         let word = options.word || null;
-        const messages = options.messages || options.lang === "en" ? defaultOptions : defaultFROptions;
+        const messages = options.messages || defaultOptions;
         const displayWordOnGameOver = typeof options.displayWordOnGameOver === 'boolean' ? options.displayWordOnGameOver : true;
         const players = options.players || await this.#gatherPlayers(interaction, messages, options.filter ? options.filter : () => true);
 
@@ -19,9 +18,12 @@ class HangmansManager {
             await interaction.reply({ content: messages.customInitMessage.replace(/{players}/gi, players.length) });
             // eslint-disable-next-line no-case-declarations
             const userSelection = await this.#getWordFromPlayers(players, interaction, messages);
-            if (userSelection) { word = userSelection.word; selector = userSelection.selector; } 
+            if (userSelection) { 
+                word = userSelection.word; 
+                selector = userSelection.selector; 
+            } 
             else return interaction.reply({ content: messages.customNoMoreWords });
-        }
+        };
 
         const game = new Hangman(word, interaction, players, messages, displayWordOnGameOver);
         await game.start();
@@ -34,7 +36,10 @@ class HangmansManager {
             const players = [];
             const gatherFilter = msg => msg.content.toLowerCase().includes('join') && !msg.author.bot && filter(msg.author);
             const collector = interaction.channel.createMessageCollector({ gatherFilter, time: 10_000 });
-            collector.on('collect', msg => { players.push(msg.author); msg.delete(); });
+            collector.on('collect', msg => { 
+                players.push(msg.author); 
+                msg.delete(); 
+            });
             collector.on('end', async () => resolve(players) );
         });
     };
@@ -46,9 +51,15 @@ class HangmansManager {
             let players = [];
             const gatherFilter = (r, u) => r.emoji.name === emoji && !u.bot && filter(u);
             const collector = botReply.createReactionCollector({ gatherFilter, time: 10_000, dispose: true });
-            collector.on('collect', (r, u) => { if(!u.bot) players.push(u) });
-            collector.on('remove', (r, u) => { players = players.filter(p => p.id !== u.id ) });
-            collector.on('end', async () => { resolve(players); });
+            collector.on('collect', (r, u) => { 
+                if(!u.bot) players.push(u) 
+            });
+            collector.on('remove', (r, u) => { 
+                players = players.filter(p => p.id !== u.id ) 
+            });
+            collector.on('end', async () => { 
+                resolve(players); 
+            });
         });
     };
 
@@ -61,7 +72,9 @@ class HangmansManager {
         botReply.delete();
         const players = [];
         // join both arrays of players into one of unique players.
-        aPlayers.forEach(ps => ps.forEach(p => { if (!players.find(pOther => pOther.id == p.id)) players.push(p); }));
+        aPlayers.forEach(ps => ps.forEach(p => { 
+            if (!players.find(pOther => pOther.id == p.id)) players.push(p); 
+        }));
         return players;
     };
 
@@ -83,7 +96,9 @@ class HangmansManager {
                 try {
                     const filter = (m) => !m.author.bot;
                     msgCollection = await dm.awaitMessages({ filter, max: 1, time: 30_000, errors: ['time'] })
-                    .catch((collected) => { throw collected; });
+                    .catch((collected) => { 
+                        throw collected; 
+                    });
                 } catch (collected) {
                     await dm.send(messages.timesUpDm);
                     await interaction.reply({ content: messages.timesUpMsg });
