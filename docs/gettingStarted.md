@@ -14,7 +14,7 @@ The game mode must be either `'custom'` or `'random'`.
 
 Example :
 ```js
-await hangman.create(message.channel, 'random')
+await hangman.create(interaction, 'random')
 ```
 
 ## Gamemodes
@@ -28,7 +28,7 @@ There are two game modes available, `'custom'` and `'random'`.
 To use a defined word, for example a word in your language, you can use the `option.word` option.
 
 ```js
-await hangman.create(message.channel, 'random', { word: 'discord' })
+await hangman.create(interaction, 'random', { word: 'discord' })
 ```
 The word provided must not contain spaces, numbers or special characters. Only uppercase, lowercase and accented letters or not.
 If the game mode is set to `'custom'`, this option will be ignored.
@@ -39,16 +39,27 @@ You can automatically add certain players to a game and start the game by using 
 One particular use of this option, is to automatically start a game with the players value being the message author which creates a quick singleplayer game.
 
 ```js
-hangman.create(message.channel, 'random', { players: [message.author] })
+hangman.create(interaction, 'random', { players: [message.author] })
 ```
 The players value provided must be an array of discord users.
+
+## Language option
+
+You can change the langage of random words and of the bot reponses by using the `option.lang` option.
+*The supporting languages are only English and French at the moment*
+
+```js
+hangman.create(interaction, 'random', { lang: "fr" })
+```
+The lang value provided must be an String "en" or "fr".
+*The default langage is English*
 
 ## Filter option
 
 The filter option, allows you determine which people are allowed to join a game. The filter option let's you do this by letting you create your very own function!
 
 ```js
-await hangman.create(message.channel, 'random', {
+await hangman.create(interaction, 'random', {
     filter: user => message.guild.member(user.id).roles.cache.has('ROLEID')
 })
 ```
@@ -88,22 +99,22 @@ You can easily translate the messages of the module into your language by using 
 By default, the module displays at the end of the game the word to be found in case of a defeat. If you want to use a custom message, you can use the `displayWordOnGameOver` option and a `.then()`.
 
 ```js
-hangman.create(message.channel, 'random', { displayWordOnGameOver: false }).then(data => {
+hangman.create(interaction, 'random', { displayWordOnGameOver: false }).then(data => {
 
     if(!data.game) return; // If the game is cancelled or no one joins it
 
     if (data.game.status === 'won') {
-        if (data.selector) message.channel.send(`Congratulations, you found the word! ${data.selector.username}... You should provide a more complicated word next time!`); // data.selector is the user who chose the word (only in custom game mode)
+        if (data.selector) interaction.reply({ content: `Congratulations, you found the word! ${data.selector.username}... You should provide a more complicated word next time!` }); // data.selector is the user who chose the word (only in custom game mode)
 
-        else message.channel.send('Congratulations you found the word!');
+        else interaction.reply({ content: 'Congratulations you found the word!' });
     }
     else if (data.game.status === 'lost') {
-        if (data.selector) message.channel.send(`${data.selector.username} Beat you all! The word was ${data.game.word}.`);
+        if (data.selector) interaction.reply({ content: `${data.selector.username} Beat you all! The word was ${data.game.word}.` });
         
-        else message.channel.send(`You lost! The word was ${data.game.word}.`);
+        else interaction.reply({ content: `You lost! The word was ${data.game.word}.` });
     }
     else {
-        message.channel.send('15 minutes have passed! The game is over.'); // If no one answers for 15 minutes
+        interaction.reply({ content: '15 minutes have passed! The game is over.' }); // If no one answers for 15 minutes
     }
 
 });
