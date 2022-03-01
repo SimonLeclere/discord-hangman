@@ -24,13 +24,9 @@ Example : A screenshot of the game
 
 ## Installation
 
-For node versions higher than v16.6.0 and Discord.js V13 (default)
+Require node versions higher than v16.6.0 and Discord.js V13
 ```js
 npm install discord-hangman
-```
-For node versions higher than v12 and Discord.js V12
-```js
-npm install discord-hangman@1.2.2
 ```
 
 ## Documentation
