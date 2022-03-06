@@ -41,3 +41,4 @@ https://github.com/Zheoni/Hanger-Bot
 Which is unfortunately no longer updated :/
 
 PS : A huge thanks to [@Spongecade](https://github.com/Spongecade) for his help and participation, without him discord-hangman would not be what it is today :)
+PS² : Thanks to [@LACOSTAR91](https://github.com/LACOSTAR91) for his participation to the update for support the V13 of Discord.js 
