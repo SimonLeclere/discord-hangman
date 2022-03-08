@@ -9,20 +9,21 @@ class HangmansManager {
         const messages = options.messages || defaultOptions;
         const displayWordOnGameOver = typeof options.displayWordOnGameOver === 'boolean' ? options.displayWordOnGameOver : true;
         const players = options.players || await this.#gatherPlayers(interaction, messages, options.filter ? options.filter : () => true);
-
-        if (players.length === 0) return interaction.reply({ content: messages.createNoPlayers });
-        if (gameType === 'custom' && players.length < 2) return interaction.reply({ content: messages.customNotEnoughPlayers });
+        await interaction.deferReply();
+        
+        if (players.length === 0) return interaction.editReply({ content: messages.createNoPlayers });
+        if (gameType === 'custom' && players.length < 2) return interaction.editReply({ content: messages.customNotEnoughPlayers });
 
         let selector;
         if (gameType === 'custom') {
-            await interaction.reply({ content: messages.customInitMessage.replace(/{players}/gi, players.length) });
+            await interaction.editReply({ content: messages.customInitMessage.replace(/{players}/gi, players.length) });
             // eslint-disable-next-line no-case-declarations
             const userSelection = await this.#getWordFromPlayers(players, interaction, messages);
             if (userSelection) { 
                 word = userSelection.word; 
                 selector = userSelection.selector; 
             } 
-            else return interaction.reply({ content: messages.customNoMoreWords });
+            else return interaction.editReply({ content: messages.customNoMoreWords });
         };
 
         const game = new Hangman(word, interaction, players, messages, displayWordOnGameOver);
@@ -64,7 +65,7 @@ class HangmansManager {
     };
 
     async #gatherPlayers(interaction, messages, filter) {
-        await interaction.reply({ content: messages.gatherPlayersMsg });
+        await interaction.editReply({ content: messages.gatherPlayersMsg });
         const botReply = await interaction.fetchReply();
         const p1 = this.#gatherPlayersFromMessage(interaction, filter);
         const p2 = this.#gatherPlayersFromReaction(botReply, '📒', filter);
@@ -101,7 +102,7 @@ class HangmansManager {
                     });
                 } catch (collected) {
                     await dm.send(messages.timesUpDm);
-                    await interaction.reply({ content: messages.timesUpMsg });
+                    await interaction.editReply({ content: messages.timesUpMsg });
                     finish = true;
                     continue;
                 };
