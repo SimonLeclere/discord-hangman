@@ -19,4 +19,4 @@ module.exports = {
     noplayersleft: 'No Players Left',
     gameOver: 'Game over !',
     gameOverMsg: 'The word was {word}'
-}
+};
