@@ -3,13 +3,13 @@ const Hangman = require('./hangman.js');
 
 class HangmansManager {
     async create(interaction, gameType, options = {}) {
+        await interaction.deferReply();
         if (!['custom', 'random'].includes(gameType)) throw new Error('Gamemode must be either \'custom\' or \'random\'');
 
         let word = options.word || null;
         const messages = options.messages || defaultOptions;
         const displayWordOnGameOver = typeof options.displayWordOnGameOver === 'boolean' ? options.displayWordOnGameOver : true;
         const players = options.players || await this.#gatherPlayers(interaction, messages, options.filter ? options.filter : () => true);
-        await interaction.deferReply();
         
         if (players.length === 0) return interaction.editReply({ content: messages.createNoPlayers });
         if (gameType === 'custom' && players.length < 2) return interaction.editReply({ content: messages.customNotEnoughPlayers });
@@ -25,7 +25,8 @@ class HangmansManager {
             } 
             else return interaction.editReply({ content: messages.customNoMoreWords });
         };
-
+        
+        await interaction.deleteReply();
         const game = new Hangman(word, interaction, players, messages, displayWordOnGameOver);
         await game.start();
         return { game, selector };
@@ -70,7 +71,7 @@ class HangmansManager {
         const p1 = this.#gatherPlayersFromMessage(interaction, filter);
         const p2 = this.#gatherPlayersFromReaction(botReply, '📒', filter);
         const aPlayers = await Promise.all([p1, p2]);
-        botReply.delete();
+        await botReply.reactions.removeAll();
         const players = [];
         // join both arrays of players into one of unique players.
         aPlayers.forEach(ps => ps.forEach(p => { 
