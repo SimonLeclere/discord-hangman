@@ -24,14 +24,14 @@ Example : A screenshot of the game
 
 ## Installation
 
-Require node versions higher than v16.6.0 and Discord.js V13
+Require node versions higher than v16.6.0 and Discord.js V14
 ```js
 npm install discord-hangman
 ```
 
 ### Important !!
 
-This module requires the following intents : `GUILDS`, `GUILD_MESSAGES`, `GUILD_MESSAGE_REACTIONS`, `DIRECT_MESSAGES`, `DIRECT_MESSAGE_REACTIONS`
+This module requires the following intents : `GUILDS`, `GUILD_MESSAGES`, `MESSAGE_CONTENT`, `GUILD_MESSAGE_REACTIONS`, `DIRECT_MESSAGES`, `DIRECT_MESSAGE_REACTIONS`
 
 ## Documentation
 

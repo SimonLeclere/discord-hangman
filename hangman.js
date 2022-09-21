@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const randomWord = require('random-word');
 
 class hangman {
@@ -32,7 +32,12 @@ class hangman {
     };
 
     async showProgress() {
-        const embed = new MessageEmbed().setDescription('```\n' + this.getFigure() + '```').addField('Players', this.playerlist()).setColor(this.gameOver ? (this.status === 'won' ? 0x00CC00 : 0xE50000) : 0x000000);
+
+        const embed = new EmbedBuilder()
+            .setDescription('```\n' + this.getFigure() + '```')
+            .addFields([{ name: 'Players', value: this.playerlist() }])
+            .setColor(this.gameOver ? (this.status === 'won' ? 0x00CC00 : 0xE50000) : 0x000000);
+        
         if (this.message) await this.message.edit({ embeds: [embed] });
         else this.message = await this.interaction.channel.send({ embeds: [embed] });
     };
@@ -101,6 +106,7 @@ class hangman {
 
         return new Promise(resolve => {
             collector.on('collect', async (m) => {
+
                 if (!m.content.match(new RegExp(`^[A-Za-zÀ-ú](?:.{0}|.{${this.word.length - 1}})$`))) return;
                 const c = m.content.toLowerCase();
                 m.delete();

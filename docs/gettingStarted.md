@@ -17,6 +17,13 @@ Example :
 await hangman.create(interaction, 'random')
 ```
 
+Don't forget to use the right intents :
+    
+```js
+const intents = new IntentsBitField([IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.MessageContent, IntentsBitField.Flags.GuildMessageReactions, IntentsBitField.Flags.DirectMessages]);
+const client = new Client({ intents });
+```
+
 ## Gamemodes
 
 There are two game modes available, `'custom'` and `'random'`.
