@@ -10,10 +10,9 @@
   "author": "Simon Leclère",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^13.6.0",
+    "discord.js": "^13.11.0",
     "random-word": "^2.0.0"
   },
-  "devDependencies": {},
   "keywords": [
     "discord",
     "hangman",

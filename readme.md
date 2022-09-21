@@ -29,6 +29,10 @@ Require node versions higher than v16.6.0 and Discord.js V13
 npm install discord-hangman
 ```
 
+### Important !!
+
+This module requires the following intents : `GUILDS`, `GUILD_MESSAGES`, `GUILD_MESSAGE_REACTIONS`, `DIRECT_MESSAGES`, `DIRECT_MESSAGE_REACTIONS`
+
 ## Documentation
 
 To quickly understand how to use the module, you can read [Getting Started](/docs/gettingStarted.md).

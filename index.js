@@ -7,10 +7,11 @@ class HangmansManager {
         if (!['custom', 'random'].includes(gameType)) throw new Error('Gamemode must be either \'custom\' or \'random\'');
 
         let word = options.word || null;
+        const lives = options.lives || 6;
         const messages = options.messages || defaultOptions;
         const displayWordOnGameOver = typeof options.displayWordOnGameOver === 'boolean' ? options.displayWordOnGameOver : true;
         const players = options.players || await this.#gatherPlayers(interaction, messages, options.filter ? options.filter : () => true);
-        
+
         if (players.length === 0) return interaction.editReply({ content: messages.createNoPlayers });
         if (gameType === 'custom' && players.length < 2) return interaction.editReply({ content: messages.customNotEnoughPlayers });
 
@@ -27,7 +28,7 @@ class HangmansManager {
         };
         
         await interaction.deleteReply();
-        const game = new Hangman(word, interaction, players, messages, displayWordOnGameOver);
+        const game = new Hangman(word, interaction, players, messages, displayWordOnGameOver, lives);
         await game.start();
         return { game, selector };
     };

@@ -2,9 +2,10 @@ const { MessageEmbed } = require('discord.js');
 const randomWord = require('random-word');
 
 class hangman {
-    constructor(word = null, interaction, players, messages, displayWordOnGameOver) {
+    constructor(word = null, interaction, players, messages, displayWordOnGameOver, lives) {
         this.word = word || randomWord();
-        this.lives = 6;
+        this.startingLives = lives;
+        this.lives = lives;
         this.progress = hangman.hyphenString(this.word.length);
         this.remaining = this.word.length;
         this.misses = [];
@@ -17,9 +18,10 @@ class hangman {
         this.displayWordOnGameOver = displayWordOnGameOver;
     }
 
-    static hyphenString(n) { 
+    static hyphenString(n) {
         return '-'.repeat(n); 
     };
+
     replaceChar(char) { 
         for (let i = 0; i < this.word.length; ++i) { 
             if (this.word[i] === char) { 
@@ -43,11 +45,18 @@ class hangman {
     };
 
     getFigure() {
+
+        let livesString = '';
+        if(this.startingLives > 6) {
+            livesString = `❤️×${this.lives}`;
+        }
+        else livesString = '❤️'.repeat(this.lives) + '🖤'.repeat(this.startingLives - this.lives);
+
         return `
      +---+
      |   |      ${this.progress}
      ${this.lives < 6 ? '0' : ' '}   |
-    ${this.lives < 4 ? '/' : ' '}${this.lives < 5 ? '|' : ' '}${this.lives < 3 ? '\\' : ' '}  |      ${'❤️'.repeat(this.lives >= 0 ? this.lives : 0) + '🖤'.repeat(6 - this.lives)}
+    ${this.lives < 4 ? '/' : ' '}${this.lives < 5 ? '|' : ' '}${this.lives < 3 ? '\\' : ' '}  |      ${livesString}
     ${this.lives < 2 ? '/' : ' '} ${this.lives < 1 ? '\\' : ' '}  |      ${this.messages.misses}: ${this.misses.join(' ')}
          |
      =========  ${this.gameOver ? (this.status === 'won' ? this.messages.won : this.messages.gameOver) : ''} ${this.displayWordOnGameOver && this.gameOver && this.status !== 'won' ? this.messages.gameOverMsg.replace(/{word}/gi, this.word) : ''}
@@ -81,9 +90,14 @@ class hangman {
     };
 
     async start() {
+
+        this.replaceChar(' ');
+        
         await this.showProgress();
-        const filter = ((m) => this.players.find((p) => (p.id == m.author.id)));
-        const collector = this.interaction.channel.createMessageCollector(filter, { time: 900_000 });
+
+        const filter = (m) => this.players.find(p => p.id == m.author.id);
+
+        const collector = this.interaction.channel.createMessageCollector({ filter: filter, time: 900_000 });
 
         return new Promise(resolve => {
             collector.on('collect', async (m) => {

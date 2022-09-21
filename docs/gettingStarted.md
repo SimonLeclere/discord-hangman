@@ -23,6 +23,8 @@ There are two game modes available, `'custom'` and `'random'`.
 - When the game mode is set to `'random'`, the word to guess is drawn at random.
 - In `'custom'` mode, a player is randomly chosen to pick the word. This player will not be able to participate in the game afterwards.
 
+In both gamemodes, failing to guess the whole word will result in the player being eliminated !
+
 ## Customize the word
 
 To use a defined word, for example a word in your language, you can use the `option.word` option.
@@ -42,6 +44,14 @@ One particular use of this option, is to automatically start a game with the pla
 hangman.create(interaction, 'random', { players: [interaction.user] })
 ```
 The players value provided must be an array of discord users.
+
+## Lives option
+
+You can customize the number of lives of the game by using the `option.lives` option.
+
+```js
+hangman.create(interaction, 'random', { lives: 10 })
+```
 
 ## Filter option
 
